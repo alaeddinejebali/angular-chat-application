@@ -1,0 +1,140 @@
+<html ng-app="loginEnregister">
+  <head>
+  	<title>Real Tchat </title>
+	<link rel="stylesheet" href="css/bootstrap.min.css">
+	<link rel="stylesheet" href="css/style.css"> 
+  </head>
+  <body ng-controller="loginEnregister">
+
+	<div id="myCarousel" class="carousel slide" data-ride="carousel">
+		<div class="carousel-inner" role="listbox">
+			<div class="item active">
+		    	<img src="/img/logo.png" alt="2">
+				
+		    </div>
+			<div class="item ">
+		    	<img src="/img/slide1.png" alt="1">
+		    </div>
+
+			<div class="item">
+		    	<img src="/img/slide2.png" alt="1">
+		    </div>  
+
+			<div class="item">
+		    	<img src="/img/slide2.png" alt="1">
+		    </div> 
+		</div>
+  	</div>
+  	<div class="container index">
+  		<!-- 
+  			Inteface Login 
+  		-->
+		<div ng-hide="LoginBox" class="login box-container">
+			
+			<div class="heading">
+				  <span class="highlight"><img class="img-circle" src="./img/logo12.png" width="80">
+				</span>
+   
+		  		<h2 class="login-heading">Login</h2>     
+			</div>
+
+			<!-- Remplir nom utilisateur -->
+			<div class="input-group username-group">
+		  		<span class="input-group-addon iconbg">
+					<i class="glyphicon glyphicon-user"></i>
+		  		</span>
+		  		<input id="login-username" type="text" ng-model="username" class="form-control inputbg" name="username" value="" placeholder="username or email">
+			</div>
+
+			<!-- Remplir password -->
+			<div class="input-group password-group">
+		  		<span class="input-group-addon iconbg">
+					<i class="glyphicon glyphicon-lock"></i>
+		  		</span>
+		  		<input id="login-password" type="password" ng-model="password" class="form-control inputbg" name="password" placeholder="password">
+			</div>
+
+			<!-- Alerte l'un des identifiants incorrect' -->
+			<div class="alert-group" ng-hide="LoginAlert">
+		  		<div class="alert alert-danger">
+					Wrong Username and Password combination 
+		  		</div>
+			</div>
+	
+			<!-- Boutton Login -->
+			<div class="input-group">
+				<button ng-click="login()" id="btn-login" class="btn btn-login btnbg">
+					Login 
+				</button>
+			</div>
+
+			<!-- Lien pour s'inscrire' -->
+			<div class="signup-box">
+			  	<h4>Don't have an account ? <u><span ng-click="toggle_register()">SignUp</span></u></h4>
+			</div>
+		</div>
+		
+		<!--Interface d'Inscription s'affiche-->
+		<div ng-hide="RegisterBox" class="register box-container">
+
+			<div class="heading">
+				<h2 class="login-heading">Register</h2>        
+			</div>
+
+				<!-- Entrer mail user -->
+			<div class="input-group username-group">
+				<span class="input-group-addon iconbg">
+					<i class="glyphicon glyphicon-envelope"></i>
+			  	</span>
+			  	<input id="register-username" type="text" ng-model="mail"  class="form-control inputbg" name="mail" value="" placeholder="Your Email" ng-keyup="keyup_uncheck()" ng-keydown="keydown_uncheck()" ng-blur="blur_uncheck()"  ng-change="change_uncheck()">
+			</div>
+
+			<!-- Entrer nom user -->
+			<div class="input-group username-group">
+				<span class="input-group-addon iconbg">
+					<i class="glyphicon glyphicon-user"></i>
+			  	</span>
+			  	<input id="register-username" type="text" ng-model="username"  class="form-control inputbg" name="username" value="" placeholder="Your Username" ng-keyup="keyup_uncheck()" ng-keydown="keydown_uncheck()" ng-blur="blur_uncheck()"  ng-change="change_uncheck()">
+			</div>
+
+			<!-- Afficher alerte s'il existe déjàà ' -->
+			<div class="alert-group" ng-hide="RegisterAlert">
+			  	<div class="alert alert-danger">
+					This username is already taken. 
+			  	</div>
+			</div>
+
+			<!-- Entrer password -->			
+			<div class="input-group password-group">
+			  	<span class="input-group-addon iconbg">
+					<i class="glyphicon glyphicon-lock"></i>
+			  	</span>
+			  	<input id="register-password" type="password" ng-model="password"  class="form-control inputbg" name="password" placeholder="Your Password">
+			</div>
+
+			<!-- Télécharger une image -->			
+			<div class="input-group p_photo-group">
+				<input id="p_photo-password" type="file" class="p_photo inputbg" file-model = "myFile" name="photo">
+			</div>
+			<div id="selectedFile" class="selectedFile" >Upload Profile Image:</div>
+
+			<!-- Boutton Register -->
+			<div class="input-group">
+				<button id="btn-login" class="btn btn-login btnbg" ng-click="register()">
+					Register
+			  	</button>
+			</div>
+
+			<!-- Lien pour interface  Login -->
+			<div class="signup-box">
+				<h4>Already have an account ? <u><span ng-click="toggle_login()">SignIn</span></u></h4>
+			</div>
+		</div>
+	</div>
+	
+  <script src = "js/lib/angular.min.js"></script>
+  <script src = "js/loginController.js"></script>
+  <script src = "js/lib/jquery.min.js"></script>
+  <script src = "js/lib/bootstrap.min.js"></script>
+  </body>
+</html>

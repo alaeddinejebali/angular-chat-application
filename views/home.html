@@ -1,0 +1,283 @@
+<html ng-app="home">
+  <head>
+	<title>Real TChat</title>
+	<link rel="stylesheet" href="css/bootstrap.min.css">
+	<link rel="stylesheet" href="css/font-awesome.min.css">
+	<link rel="stylesheet" href="css/style.css"> 
+	<link rel="stylesheet" href="angularjs-toaster/toaster.min.css" />
+
+	<link rel="stylesheet" href="emoticon/ng-emoticons.min.css"/>
+
+  </head>
+  <body ng-controller="home">    
+	<div class="body">
+
+		<h1>AAAAAAAAAAAAA</h1>
+		Hi <i class="emoticon emoticon-smile" title=":smile:"></i> ok?
+		<h1>BBBBBBBBBB</h1>
+
+		<h1>CCCCCCCCCCC</h1>
+	  
+		<div class="rows">
+
+			<div class="col-md-8 msg-wrapper">
+
+				<!-- 
+					afficher nom utilisateurs qui font le chat
+				-->
+				<div class="msg-wrapper-header">
+					<div class="chat-user-meta">
+				  		<span class="user-name">{{send_to_user_name=='' ? 'Select User to Chat': send_to_user_name}} </span>  
+					<div class="icon-video">
+						<a Title="Appel">
+							<span class="glyphicon glyphicon-earphone fa-2x"></span> 
+						</a>
+						<a Title="Video">
+							<span class="glyphicon glyphicon-facetime-video fa-2x"></span> 
+						</a>	
+					</div>	
+					</div>
+			  	</div>
+			  	<div class="msg-wrapper-body">
+			  		<!-- 
+						Affichage des messages à l'utilisateur
+					-->
+					<div class="msg-container" id="msg-container">
+				  		<div class="msg-single" ng-repeat="msg_data in msgs"  
+							ng-style="{
+						  		'float': uid==msg_data.to_id ? 'left' :'right'
+							}">
+					  		<div class="msg-conatiner">
+								<div class="alert alert-success">{{msg_data.msg}}</div>
+								<span class="msg-meta">{{msg_data.timestamp*1000 | date}}</span>
+					  		</div>
+				  		</div> 
+					</div>
+					<!-- 
+						Boîte de message pour envoyer des messages 
+					-->
+					<div class="send-container">
+				 		<textarea class="form-control send-msg-text" ng-model='send_text' send-typing-notification placeholder="Type your message here" ></textarea>
+				  		<h1 class="send-btn" ng-click="send_msg('','','')"><span class="glyphicon glyphicon-send"></span></h1>
+					</div>
+
+                    <div STYLE="float:left">
+
+                        &nbsp;&nbsp;&nbsp;&nbsp;
+
+                    <a href="#"><i class="fa fa-folder"></i></a>&nbsp;&nbsp;&nbsp;&nbsp;
+                    <a href="#"><i class="fa fa-file-image-o"></i></a>&nbsp;&nbsp;&nbsp;&nbsp;
+                    <a href="#"><i class="fa fa-camera"></i></a>&nbsp;&nbsp;&nbsp;&nbsp;
+                    <a href="#"><i class="fa fa-microphone"></i></a>&nbsp;&nbsp;&nbsp;&nbsp;
+                    <a href="#"><i class="fa fa-meh-o"></i></a>&nbsp;&nbsp;&nbsp;&nbsp;
+                    <a href="#"><i class="fa fa-thumbs-up"></i></a>
+
+                    </div>
+
+                    <div  STYLE="float:right">
+                    
+                     </div>		
+			  	</div>
+			</div>
+			
+			<div class="col-md-4  list-wrapper">
+
+				<!-- 
+					Affichage de la liste de discussion pour l'utilisateur 
+				-->	
+				<div class="col-md-12 list-wrapper-header">
+
+					<!-- 
+						Affiche image Profile
+					-->	
+					<div class="profile_pic">
+						<img class="img-circle" ng-src="{{show_userinfo.data.photo}}">
+					</div>
+					<!-- 
+						Lien Pour modal 
+					-->	
+					<div class="icon-set">
+						<a Title="Start New chat" ng-click='get_users_to_chats()' data-toggle="modal" data-target="#myModal">
+							<span class="glyphicon glyphicon-plus"></span>
+						</a>
+						
+                        <a Title="Reglage" ng-click='' data-toggle="modal" data-target="#myModalPassword">
+						     <span class="glyphicon glyphicon-wrench"></span>
+						</a>
+
+						<a Title="Logout" href="/logout">
+							<span class="glyphicon glyphicon-off"></span>
+						</a>
+						
+					</div>
+					<!-- 
+						Affiche le statut onligne ou hors ligne
+					-->	
+					<div class="user-meta">
+						<span class="user-name">{{show_userinfo.data.name}}</span>
+						<span class="user-status">{{show_userinfo.data.statut=='ON' ? 'Online': 'Offline' }}</span>
+					</div>
+				</div>
+				<!--
+					Affiche liste chat
+				-->
+				<div class="listuser">
+
+					<!-- 
+						Utiliser ng-repeat pour afficher les users
+					-->	
+					<div class="listuser-single" ng-repeat="singleuser in ListUser"
+						ng-click="hightlight_user(singleuser)"
+					  	ng-class="(hightlight_id==singleuser.id ? 'hightlight_user_class' :'')"
+					  	ng-style="{
+							'display': uid==singleuser.id ? 'none' :''
+						}">
+						<!-- 
+							Affiche username, Image profile et son statut 
+						-->	
+						<div class="listuser-user-meta">
+							<img class="img-circle" ng-src="{{singleuser.photo}}"/>
+								<span class="online-user-status"
+						  			ng-class="(singleuser.statut=='ON' ? 'status-online' :'status-offline')"
+								></span>
+							<span title="{{singleuser.socketId}}" class="listuser-userName">{{singleuser.name}}</span>
+							<!-- 
+								Affiche l'indicateur "Typing indicator'  
+							-->	
+							<span id="isTyping_{{singleuser.id}}" class="is-typing">is typing...</span>
+						</div>				  
+					</div>
+					<!-- 
+						Alerte lorsque le user na pas selectionner un chat
+					-->	
+					<div ng-show="ListUser.length == 1 && ListUser[0].name==show_userinfo.data.name"  >
+						<div class="alert alert-danger" >
+						  <p class="text-center" >
+							Everyone is offline.
+							<br/><br/>
+							Share this url and Tell your friends to come online.
+						  </p >
+						</div >
+					</div>
+
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- 
+		Element HTML  pour afficher toster pour notification
+	-->	
+	<toaster-container></toaster-container>
+	<!-- 
+		Bootstrap modal 
+	-->
+	<div id="myModal" class="modal fade" role="dialog">
+		<div class="modal-dialog">
+
+		<!-- Modal Contenue -->
+		<div class="modal-content">
+			
+			<!-- Modal Entete-->
+			<div class="modal-header">
+				<a type="button" class="close" data-dismiss="modal">&times;</a>
+				<p class="modal-title">Start new chat</p>
+			</div>
+			<!-- Modal Corps starts-->
+			<div class="modal-body">
+			
+				<!-- 
+				  Liste des nouveau user dans le chat
+				-->	
+				<div class="newChat" ng-repeat="singleOfflineUser in ListNouveauUser" 
+					ng-class="(hightlight_id==singleOfflineUser.id ? 'hightlight_user_class' :'')"
+					id='modal_user_{{singleOfflineUser.id}}'
+					>
+
+					<div class="listuser-user-meta">
+						<!-- 
+							Details user : username , photo profile 
+						-->						
+						<div class="newChat-user-meta">
+							<img class="img-circle" ng-src="{{singleOfflineUser.photo}}">                    
+							<span class="listuser-userName">{{singleOfflineUser.name}}</span>
+							<span class="send-msg-offline sendButton{{singleOfflineUser.id}}">
+								<span class="glyphicon glyphicon-plus showMSgBox_{{singleOfflineUser.id}}" ng-click="hideShowMsgBox(singleOfflineUser.id,'show',$event)"></span>
+								<span class="glyphicon glyphicon-minus hideMsgBox_{{singleOfflineUser.id}} send-msg-hidden" ng-click="hideShowMsgBox(singleOfflineUser.id,'hide',$event)"></span>
+							</span>
+						</div>
+						<!-- 
+							Boite de texte pour envoyer le msgs 
+						-->	
+						<div ng-bind-html="text | emoticons" class="send-msg-offline-text send-msg-hidden collapseMsgBox_{{singleOfflineUser.id}}">
+							<textarea id="msg_modal_{{singleOfflineUser.id}}" class="form-control" ng-model='send_text' placeholder="Type your message here"></textarea>
+							<button class="btn btn-primary newChat-send-mesaage" data-dismiss="modal" ng-click="send_msg('fromModal','',singleOfflineUser.id)">
+								Send Message
+							</button>                        
+						</div>					
+					</div>
+				</div>					
+		  	</div>
+		
+		</div>
+	
+	  </div>
+	</div>
+	
+
+	<div id="myModalPassword" class="modal fade" role="dialog">
+		<div class="modal-dialog">
+
+		<!-- Modal Contenue -->
+		<div class="modal-content">
+			
+			<!-- Modal Entete-->
+			<div class="modal-header">
+				<a type="button" class="close" data-dismiss="modal">&times;</a>
+				<p class="modal-title">Change Password </p>
+			</div>
+			<!-- Modal Corps starts-->
+			<div class="modal-body">
+					<div class="listuser-user-meta">					
+						
+						<!-- 
+							Boite de texte pour envoyer le msgs 
+						-->	
+						<div class="">
+							<input id="" type="password"  class="form-control inputbg" name="password" placeholder="Ancien Mot de Passe"></input>
+							<br>
+							<br>
+							<input id="" type="password"  class="form-control inputbg" name="password"  placeholder="Nouveau Mot de Passe "></input>
+							<br>
+							<br>
+							<input id="" type="password"  class="form-control inputbg" name="password" placeholder="Confirmer Nouveau Mot de Passe"></input>
+							<br>
+							<br>
+							<button class="btn btn-primary newChat-send-mesaage" data-dismiss="modal" ng-click="">
+								Confirmer
+							</button>                        
+						</div>					
+					</div>
+				</div>					
+		  	</div>
+		
+		</div>
+	
+	  </div>
+	</div>
+
+	<script type="text/javascript" src="js/lib/jquery.min.js"></script>
+	<!-- <script type="text/javascript" src="https://code.angularjs.org/1.6.3/angular.min.js"></script> -->
+	<script type="text/javascript" src="js/lib/bootstrap.min.js"></script>
+	<script type="text/javascript" src ="js/lib/angular.min.js"></script>
+	<script type="text/javascript" src="js/lib/angular-animate.min.js" ></script>
+	<script type="text/javascript" src="angularjs-toaster/toaster.min.js"></script>
+	<script type="text/javascript" src="/socket.io/socket.io.js"></script>
+
+	<script src="emoticon/angular-sanitize.js"></script>
+	 <script src="emoticon/ng-emoticons.js"></script>
+	<script type="text/javascript" src ="js/homeController.js"></script>
+
+
+  </body>
+</html>
